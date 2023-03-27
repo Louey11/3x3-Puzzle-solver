@@ -1,18 +1,14 @@
 import time
-initial = [
-    [5, 4, 2],
-    [8, 1, 3],
-    [0, 6, 7]
-]
+initial = [[1, 2, 3],
+           [8, 0, 6],
+           [7, 5, 4]
+           ]
 
 final = [
     [1, 2, 3],
-    [4, 0, 5],
-    [6, 7, 8]
+    [8, 0, 4],
+    [7, 6, 5]
 ]
-
-
-
 
 
 def show_taquin(taquin):
@@ -34,9 +30,9 @@ def get_number_at_position(taquin, pos):
     return taquin[pos[0]][pos[1]]
 
 
-
 def swap_positions(taquin, pos1, pos2):
-    taquin[pos1[0]][pos1[1]], taquin[pos2[0]][pos2[1]] = taquin[pos2[0]][pos2[1]], taquin[pos1[0]][pos1[1]]
+    taquin[pos1[0]][pos1[1]], taquin[pos2[0]][pos2[1]
+                                              ] = taquin[pos2[0]][pos2[1]], taquin[pos1[0]][pos1[1]]
 
 
 def transition(taquin):
@@ -55,60 +51,62 @@ def transition(taquin):
     # return empty list if empty_pos not found
     return possible_moves.get(empty_pos, [])
 
+
 def successors_of(first_node):
-    possible=transition(first_node)
-    successors=[]
+    possible = transition(first_node)
+    successors = []
     for possible_transition in possible:
         T = [ele[:] for ele in first_node]
-        swap_positions(T,get_empty_position(first_node),possible_transition)
+        swap_positions(T, get_empty_position(first_node), possible_transition)
         successors.append(T)
     return successors
 
 
-def recherche(initial,final):
+def recherche(initial, final):
     if initial == final:
         success = True
         return [initial]
-    free_nodes=[initial]
-    closed_nodes=[]
-    goalNode=[]
-    success=False
+    free_nodes = [initial]
+    closed_nodes = []
+    goalNode = []
+    success = False
     visited = 0
-    while (free_nodes != [] and not(success)):
-        first_node=free_nodes.pop()
+    while (free_nodes != [] and not (success)):
+        first_node = free_nodes.pop()
         closed_nodes.append(first_node)
-        generated_states=[]
-        generated_states=successors_of(first_node)
+        generated_states = []
+        generated_states = successors_of(first_node)
         generated_states = [
-            s for s in generated_states if 
+            s for s in generated_states if
             (
                 s not in free_nodes and
                 s not in closed_nodes
-              )
+            )
         ]
         free_nodes += generated_states
         for s in generated_states:
-            visited+=1
-            with open("output.txt", "w") as f:
-                f.write(str(visited))
-            if s==final :
-                success=True
+            visited += 1
+            # with open("output.txt", "w") as f:
+            #     f.write(str(visited))
+            if s == final:
+                success = True
                 goalNode.append(s)
-                with open("output.txt", "a") as f:
-                    f.write("\n"+str(len(closed_nodes)))
+                print(visited)
+                print(len(closed_nodes))
+                # with open("output.txt", "a") as f:
+                #     f.write("\n"+str(len(closed_nodes)))
                 break
 
     return closed_nodes
-        
 
 
-result=recherche(initial,final)
+result = recherche(initial, final)
 
-for i in result:
-    show_taquin(i)
-    print("***************")
+# for i in result:
+#     show_taquin(i)
+#     print("***************")
 
-show_taquin(final)
+# show_taquin(final)
 
 # def dfs(graph, node):
 #     visited = []
@@ -125,4 +123,3 @@ show_taquin(final)
 #         if n not in visited:
 #             visited.append(n)
 #             stack.append(n)
-
