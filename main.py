@@ -62,7 +62,7 @@ def successors_of(first_node):
     return successors
 
 
-def recherche(initial, final):
+def recherche(initial, final, callback=None):
     if initial == final:
         success = True
         return [initial]
@@ -86,40 +86,9 @@ def recherche(initial, final):
         free_nodes += generated_states
         for s in generated_states:
             visited += 1
-            # with open("output.txt", "w") as f:
-            #     f.write(str(visited))
+            if callback:
+                callback(visited, len(closed_nodes))
             if s == final:
                 success = True
                 goalNode.append(s)
-                print(visited)
-                print(len(closed_nodes))
-                # with open("output.txt", "a") as f:
-                #     f.write("\n"+str(len(closed_nodes)))
                 break
-
-    return closed_nodes
-
-
-result = recherche(initial, final)
-
-# for i in result:
-#     show_taquin(i)
-#     print("***************")
-
-# show_taquin(final)
-
-# def dfs(graph, node):
-#     visited = []
-#     stack = deque()
-
-#     visited.append(node)
-#     stack.append(node)
-
-#     while stack:
-#         s = stack.pop()
-#         print(s, end=" ")
-
-#     for n in reversed(graph[s]):
-#         if n not in visited:
-#             visited.append(n)
-#             stack.append(n)
