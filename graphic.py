@@ -1,44 +1,80 @@
-import main as test
 import tkinter as tk
 import customtkinter as ctk
+import main as solver
 
-initial = [[1, 2, 3],
-           [8, 0, 6],
-           [7, 5, 4]
-           ]
-
-final = [
-    [1, 2, 3],
-    [8, 0, 4],
-    [7, 6, 5]
-]
+# Define the final state of the puzzle
+FINAL_STATE = [[1, 2, 3],
+               [8, 0, 4],
+               [7, 6, 5]]
 
 
-def update_info(visitedResult, closedNodesResult):
-    visited_label.configure(text=f"Visited nodes: {visitedResult}")
-    closed_nodes_label.configure(text=f"Closed nodes: {closedNodesResult}")
+def get_initial_state(entries):
+    # Convert the input entries into a 3x3 matrix
+    initial = []
+    for i in range(3):
+        row = []
+        for j in range(3):
+            entry_text = entries[i][j].get()
+            if entry_text.isdigit():
+                row.append(int(entry_text))
+            else:
+                # Handle invalid input
+                row.append(0)
+        initial.append(row)
+    return initial
 
 
-def Solve():
-    global initial, final
-    test.recherche(initial, final, callback=update_info)
+def update_info(visited_result, closed_nodes_result):
+    # Update the labels with the current search status
+    visited_label.configure(text=f"Visited nodes: {visited_result}")
+    closed_nodes_label.configure(text=f"Closed nodes: {closed_nodes_result}")
 
 
+def solve_puzzle():
+    # Get the initial state from the entries and solve the puzzle
+    initial_state = get_initial_state(entry_list)
+    solver.recherche(initial_state, FINAL_STATE, callback=update_info)
+
+
+# Create the main window
 window = ctk.CTk()
 window.title('3x3 Puzzle Solver')
 window.geometry('600x400')
 
+# Create a frame to hold the entry widgets
+frame = ctk.CTkFrame(master=window, width=150, height=150)
+frame.grid(row=0, column=0)
 
+# Set the column and row weights of the frame to 1 to make it expand
+frame.columnconfigure(0, weight=1)
+frame.rowconfigure(0, weight=1)
+
+# Create the entry widgets for the initial state
+entry_list = []
+for i in range(3):
+    row_entries = []
+    for j in range(3):
+        entry = ctk.CTkEntry(master=frame,
+                             width=25,
+                             height=35,
+                             border_width=2,
+                             corner_radius=10)
+        entry.grid(row=i, column=j, sticky='nswe')
+        row_entries.append(entry)
+    entry_list.append(row_entries)
+
+frame.place(relx=0.5, rely=0.4, anchor=tk.CENTER)
+
+# Create the Solve button
 button = ctk.CTkButton(
-    master=window, text="Recherche", command=Solve)
+    master=window, text="Solve", command=solve_puzzle)
 button.place(relx=0.5, rely=0.9, anchor=tk.CENTER)
 
-
+# Create the labels to display search status
 visited_label = ctk.CTkLabel(window, text="Visited nodes: 0")
-visited_label.grid(row=0, column=0)
 visited_label.place(relx=0.5, rely=0.7, anchor=tk.CENTER)
 closed_nodes_label = ctk.CTkLabel(window, text="Closed nodes: 0")
-closed_nodes_label.grid(row=1, column=0)
 closed_nodes_label.place(relx=0.5, rely=0.8, anchor=tk.CENTER)
 
+# Start the main event loop
 window.mainloop()
