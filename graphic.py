@@ -1,11 +1,11 @@
 import tkinter as tk
 import customtkinter as ctk
 import main as solver
+import pyth as large
+import etoile as etoile
 
 # Define the final state of the puzzle
-FINAL_STATE = [[1, 2, 3],
-               [8, 0, 4],
-               [7, 6, 5]]
+FINAL_STATE = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
 
 
 def get_initial_state(entries):
@@ -26,7 +26,7 @@ def get_initial_state(entries):
 
 def update_info(visited_result, closed_nodes_result):
     # Update the labels with the current search status
-    visited_label.configure(text=f"Visited nodes: {visited_result}")
+    visited_label.configure(text=f"gen nodes: {visited_result}")
     closed_nodes_label.configure(text=f"Closed nodes: {closed_nodes_result}")
 
 
@@ -34,6 +34,18 @@ def solve_puzzle():
     # Get the initial state from the entries and solve the puzzle
     initial_state = get_initial_state(entry_list)
     solver.recherche(initial_state, FINAL_STATE, callback=update_info)
+
+
+def solve_puzzle2():
+    # Get the initial state from the entries and solve the puzzle
+    initial_state = get_initial_state(entry_list)
+    large.solve_taquin(initial_state, FINAL_STATE, callback=update_info)
+
+
+def solve_puzzle3():
+    # Get the initial state from the entries and solve the puzzle
+    initial_state = get_initial_state(entry_list)
+    etoile.solve_taquin(initial_state, FINAL_STATE, callback=update_info)
 
 
 # Create the main window
@@ -70,8 +82,17 @@ button = ctk.CTkButton(
     master=window, text="Solve", command=solve_puzzle)
 button.place(relx=0.5, rely=0.9, anchor=tk.CENTER)
 
+button = ctk.CTkButton(
+    master=window, text="Solve Largeur", command=solve_puzzle2)
+button.place(relx=0.8, rely=0.9, anchor=tk.CENTER)
+
+button = ctk.CTkButton(
+    master=window, text="Solve A*", command=solve_puzzle3)
+button.place(relx=0.2, rely=0.9, anchor=tk.CENTER)
+
+
 # Create the labels to display search status
-visited_label = ctk.CTkLabel(window, text="Visited nodes: 0")
+visited_label = ctk.CTkLabel(window, text="gen nodes: 0")
 visited_label.place(relx=0.5, rely=0.7, anchor=tk.CENTER)
 closed_nodes_label = ctk.CTkLabel(window, text="Closed nodes: 0")
 closed_nodes_label.place(relx=0.5, rely=0.8, anchor=tk.CENTER)
